@@ -68,17 +68,18 @@ class nkk_compHelloWorld:
         # Read inputs from .tsv file
 
         df = pd.read_csv(params['Input_File'], sep ='\t')
-        InChI_key = df['id']
+        ids = df['id']
         InChIes = df['structure']
 
         import inchi_to_submission as its
         import extract_properties_mulliken_charges_mol2 as mul
-       
-        its.inchi_to_dft(InChI_key,InChIes)
+        import compound_parsing as com
+        
+        its.inchi_to_dft(ids,InChIes)
 
-        length = len(InChI_key)
+        length = len(ids)
         for i in range(length):
-            os.chdir('./'+InChI_key[i]+'/dft')
+            os.chdir('./'+ids[i]+'/dft')
             file1 = open('nwchem.out', 'r')
             nAtoms = mul.getNumberOfAtoms(file1)
             energy = mul.getInternalEnergy0K(file1)
@@ -88,18 +89,20 @@ class nkk_compHelloWorld:
             mul.nAtoms = nAtoms
             mul.E0K = energy
 
-            mul.calculate(InChI_key[i])
+            mul.calculate(ids[i])
 
         for j in range(length):
-            cwd = os.getcwd()
-            print('Current Dir:',cwd)
-            os.chdir('./'+InChI_key[j]+'/dft')
+            os.chdir('./'+ids[j]+'/dft')
             os.system('ls')
-            with open(InChI_key[j]+'_Mulliken.mol2') as IN:
-                with open('../../Total_Output.txt','a') as out:
-                    for line in IN:
-                        out.write(line)
-            os.chdir('../..')
+
+            #with open(ids[j]+'_Mulliken.mol2') as IN:
+                
+            
+            
+            #xx = com._make_compound_info(open(ids[j]+'_Mulliken.mol2'))
+            #print(xx)
+                
+            #os.chdir('../..')
             
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report':{'objects_created':[],

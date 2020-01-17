@@ -15,7 +15,7 @@ from openbabel import *
 #gets the number of atoms      could grab the last xyz file ********
 def getNumberOfAtoms(open_file):
     #gets the line with "Charge" as this only occurs twice, and the first time is above the list of atoms
-    print('Here in getNumAtom')
+   
     open_file.seek(0,os.SEEK_SET) # goes to beginning of the file
     line = open_file.readline()
     while "Charge" not in line:
@@ -226,11 +226,11 @@ def getRotationalConstants(open_file):
 def calculate(InChI_key):
     os.chdir('../..')
     cwd = os.getcwd()
-    print('In Calculate:',cwd)
+
     dft_dir    =  InChI_key + '/' + 'dft'
     prop_file = InChI_key + '_prop.xyz'  
-    print('dft_dir:',dft_dir)
-    print('prop_file:',prop_file)
+
+
     matches = []
     os.chdir(dft_dir)
     pattern = 'nwchem.out'
